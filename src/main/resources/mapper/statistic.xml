@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.statisticMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.statistic">
+        <constructor>
+            <arg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="invest_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="question_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="answer_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="created" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,invest_id,question_id,answer_id,user_id,created
+    </sql>
+
+
+    <insert id="addStatistic"  parameterType="java.lang.Integer">
+        insert into statistic(invest_id,question_id,answer_id,user_id)
+        values (#{invest_id},#{question_id},#{answer_id},#{user_id})
+    </insert>
+
+    <delete id="deleteByinvest_id" parameterType="java.lang.Integer">
+        delete from statistic
+        where invest_id=#{invest_id}
+    </delete>
+
+    <delete id="deleteByQuestion_id" parameterType="java.lang.Integer">
+        delete from statistic
+        where question_id=#{question_id}
+    </delete>
+
+    <select id="selectanswered" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from statistic
+        where user_id=#{user_id}
+        group by(invest_id)
+    </select>
+
+    <select id="selectByinvest_idAnduser_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from statistic
+        where user_id=#{user_id} and invest_id=#{invest_id}
+    </select>
+
+    <select id="selectByquestion_idAnduser_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from statistic
+        where question_id=#{question_id} and user_id=#{user_id}
+    </select>
+
+    <delete id="deleteByquestion_idAnduser_id" parameterType="java.lang.Integer" >
+        delete from statistic
+        where question_id=#{question_id} and user_id=#{user_id}
+    </delete>
+
+    <select id="selectByinvest_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from statistic
+        where invest_id=#{invest_id}
+    </select>
+
+
+
+</mapper>

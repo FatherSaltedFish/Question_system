@@ -1,0 +1,171 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="css/Login.css">
+</head>
+<body>
+<div class="box">
+    <div th:switch="${model}">
+        <h2 th:case="login">喵卷星登录</h2>
+        <h2 th:case="Clogin">管理员登录</h2>
+        <h2 th:case="register">注册</h2>
+    </div>
+
+
+
+    <form th:action="${goway}" method="post" onsubmit="return check()">
+        <input type="hidden"  id="opttype" th:value="${model}">
+        <div th:switch="${model}" class="inputBox">
+            <input  th:case="login" type="tel" name="tel" required="" pattern="[0-9]{11}" >
+            <input  th:case="Clogin" type="tel" name="tel" required="" pattern="[0-9]{11}" >
+            <input  th:case="register" type="tel" name="tel" required="" pattern="[0-9]{11}" id="tel" onchange="checktel(this.value)">
+            <label>手机号/账号</label>
+        </div>
+        <label id="label_tel"></label>
+        <div class="inputBox">
+            <input type="password" id="pwd" name="pwd" required="" >
+            <label>密码</label>
+        </div>
+        <label></label>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="password" id="agpwd" name="agpwd" required=""  onchange="checkpwd()" >
+                <label>再次输入密码</label>
+                <div id="msg" style="color:red;"></div>
+            </div>
+            <label id="label_pwd"></label>
+        </div>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="email" name="email" required="" id="email" onchange="checkemail(this.value)">
+                <label>邮箱</label>
+            </div>
+            <label id="label_email"></label>
+        </div>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="username" name="username" required="" >
+                <label>用户名</label>
+            </div>
+            <label></label>
+        </div>
+        <div th:switch="${model}">
+            <input th:case="login" class="center-block" type="submit" name="" value="登录">
+            <input th:case="Clogin" class="center-block" type="submit" name="" value="登录">
+            <input th:case="register" class="center-block" type="submit" id="button_register" name="" value="注册" >
+        </div>
+
+        <div th:if="${ismember}" class="wrong">
+            <h5 id="wrong" th:text="${wrong}"></h5>
+        </div>
+        <div th:if="!${ismember}" class="wrong">
+            <h5 id="wrong" ></h5>
+        </div>
+        <div th:switch="${model}">
+            <div th:case="login" calss="other">
+                <a href="/register" id="register">用户注册</a>
+                <a href="/Clogin" id="Clogin">管理员登录</a>
+            </div>
+            <div th:case="Clogin" calss="other">
+                <a href="/register" id="register">用户注册</a>
+                <a href="/login" id="Clogin">用户登录</a>
+            </div>
+            <div th:case="register" calss="other">
+                <a href="/login" id="register">用户登录</a>
+                <a href="/Clogin" id="Clogin">管理员登录</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script language="JavaScript" type="text/javascript">
+    var request_email=false;
+    var request_tel=false;
+    var request_pwd=false;
+    function check(){
+        var opttype=document.getElementById("opttype").value;
+        if(opttype=="login" || opttype=="Clogin")
+            return true;
+        if(request_email&&request_tel&&request_pwd)
+            return true;
+        else
+            return false;
+    }
+    function checktel(){
+        var tel=document.getElementById("tel").value;
+        var xhr =new XMLHttpRequest();
+
+        xhr.onreadystatechange=function(){
+            //判断是否一切正常
+            if(xhr.readyState==4){
+                if(xhr.status==200){
+                    var msg = document.getElementById("label_tel");
+                    if(xhr.responseText=="false"){//说明该用户名，已经存在
+                        msg.innerHTML="<font color='red'>手机号已经存在,或账号长度不对，请检查</font><br>"
+                        request_tel=false;
+                        return false;
+                    }else{
+                        msg.innerHTML="<font color='blue'>可以使用</font>"
+                        request_tel=true;
+                        return true;
+                    }
+                }
+            }
+        }
+        xhr.open("POST","/checktel?tel="+tel);
+        xhr.send();
+
+    }
+    function checkemail(){
+
+        var email=document.getElementById("email").value;
+        var xhr =new XMLHttpRequest();
+
+        xhr.onreadystatechange=function(){
+            //判断是否一切正常
+            if(xhr.readyState==4){
+                if(xhr.status==200){
+                    var msg = document.getElementById("label_email");
+                    if(xhr.responseText=="false"){//说明该用户名，已经存在
+                        msg.innerHTML="<font color='red'>邮箱已注册，请更换</font><br>"
+                        request_email=false;
+                        return false;
+                    }else{
+                        msg.innerHTML="<font color='blue'>可以使用</font>"
+                        request_email=true;
+                        return true;
+                    }
+                }
+            }
+        }
+        xhr.open("POST","/checkemail?email="+email);
+        xhr.send();
+
+    }
+
+</script>
+
+
+<script language="javascript" type="text/javascript">
+    function checkpwd() {
+        var p1 =document.getElementById("pwd").value;//获取密码框的值
+        var p2 =document.getElementById("agpwd").value;//获取重新输入的密码值
+        if(p1==null || p2==null)
+            return ;
+        var msg = document.getElementById("label_pwd");
+        if (p1 !=p2) {//判断两次输入的值是否一致，不一致则显示错误信息
+            msg.innerHTML="<font color='red'>两次输入密码不正确</font><br>";
+            request_pwd=false;
+            return false;
+        }
+        else {
+            msg.innerHTML = "";
+            request_pwd=true;
+            return true;
+        }
+
+    }
+</script>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.questionMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.question">
+        <constructor>
+            <arg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="content" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="invest_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,content,invest_id
+    </sql>
+
+    <select id="selectByInvest_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from question
+        where invest_id = #{invest_id}
+    </select>
+
+    <delete id="deleteByInvest_id" parameterType="java.lang.Integer" >
+        delete
+        from question
+        where invest_id = #{invest_id}
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete
+        from question
+        where id = #{id}
+    </delete>
+
+    <insert id="addquestion" parameterType="com.example.demo.model.question" keyProperty="id" useGeneratedKeys="true">
+        insert into question(content,invest_id) values(#{content},#{invest_id})
+    </insert>
+
+    <insert id="saveAll" parameterType="java.util.List">
+        insert into question (content,invest_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.content},
+            #{item.invest_id}
+            )
+        </foreach>
+    </insert>
+
+
+</mapper>

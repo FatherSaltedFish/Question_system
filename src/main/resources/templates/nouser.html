@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <meta charset="UTF-8">
+    <title>请先登录</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+        <h2 class="text-center">未登录，请先登录</h2>
+        <p id="page_div" class="text-center">将在5秒后自动跳转到<a href="/">首页</a></p>
+    </div>
+</div>
+</body>
+
+<script language="javascript">
+    var num = 4; //倒计时的秒数
+    var URL = "/";
+    var id = window.setInterval('doUpdate()', 1000);
+    function doUpdate() {
+        document.getElementById('page_div').innerHTML = '将在'+num+'秒后自动跳转到<a href="/">首页</a>' ;
+        if(num == 0) {
+            window.clearInterval(id);
+            window.location = URL;
+        }
+        num --;
+    }
+</script>
+</html>

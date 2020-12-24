@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.investMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.invest">
+        <constructor>
+            <arg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="title" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="created" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,title,status,created
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from attendant
+        where idno = #{idno,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from invest
+    </select>
+
+    <insert id="addinvest" parameterType="java.lang.String"  keyProperty="id" useGeneratedKeys="true">
+        insert into invest(title,status)  values(#{title},0)
+    </insert>
+
+    <select id="selectinvestByid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from invest
+        where id=#{id}
+    </select>
+
+    <delete id="deleteinvest" parameterType="java.lang.Integer" >
+        delete
+        from invest
+        where id=#{id}
+    </delete>
+
+    <select id="selectBystatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from invest
+        where status=#{status}
+    </select>
+
+    <update id="updataStatus" parameterType="java.lang.Integer" >
+        update  invest
+        set status=#{status}
+        where id=#{invest_id}
+    </update>
+
+    <insert id="batchInsert" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        <!--insert into invest(student_id, student_name) values-->
+        insert into invest(title,status)  values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.title, jdbcType=INTEGER},0)
+        </foreach>
+    </insert>
+
+
+</mapper>

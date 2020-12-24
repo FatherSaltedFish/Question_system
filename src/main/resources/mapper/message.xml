@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.messageMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.message">
+        <constructor>
+            <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="email" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="message" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        name,email,message
+    </sql>
+    <insert id="insert_message" parameterType="java.lang.String" >
+        insert into message (name,email,message) values(#{name},#{email},#{message})
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from message
+    </select>
+</mapper>
