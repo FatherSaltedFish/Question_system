@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.question;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,12 @@ public class testController {
             a=fileName;
         }
         return a;
+    }
+
+    @RequestMapping(value = "/test/add")
+    public String add(HttpServletRequest request){
+        System.out.println(request.getPathInfo());
+        return "test";
     }
 }
 

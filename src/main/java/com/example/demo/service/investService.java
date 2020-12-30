@@ -19,4 +19,7 @@ public interface investService {
     void updataStatus(Integer invest_id,Integer status);
 
     int batchInsert(List<invest> invests);
+
+    List<invest> Liketitle(String title);
+
 }

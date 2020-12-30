@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class invest {
     Integer id;
@@ -58,5 +59,25 @@ public class invest {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        invest invest = (invest) o;
+        return Objects.equals(id, invest.id) &&
+                Objects.equals(title, invest.title) &&
+                Objects.equals(status, invest.status) &&
+                Objects.equals(created, invest.created);
+    }
+
+    public invest(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, status, created);
     }
 }

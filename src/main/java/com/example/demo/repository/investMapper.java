@@ -18,4 +18,6 @@ public interface investMapper {
 
     int batchInsert(List<invest> invests);
 
+    List<invest> Liketitle(String title);
+
 }

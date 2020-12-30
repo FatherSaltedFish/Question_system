@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.invest;
-import com.example.demo.model.member;
-import com.example.demo.model.question;
-import com.example.demo.model.statistic;
+import com.example.demo.model.*;
 import com.example.demo.service.i_q_aService;
 import com.example.demo.service.invest_dataService;
 import com.example.demo.service.statisticService;
@@ -49,13 +46,28 @@ public class myquestionsController {
 //        Object test=this.memberService.getmemberBytel(tel);
 //        member member = (member)test;
 //        model.addAttribute("member",member);
-
+        HttpSession session=request.getSession();//获取session并将userName存入session对象
+        Integer idno= (Integer) session.getAttribute("idno");
+        System.out.println("idno:"+idno);
+        if(idno==null)
+            return "nouser";
+        member member=this.memberService.getmemberById(idno);
+        model.addAttribute("member",member);
         model.addAttribute("opttype","main");
         return "myquestions";
     }
     @RequestMapping("/questions")
-    public String questions(@RequestParam(value="range",required = false) String range,ModelMap model,HttpServletRequest request){
+    public String questions(@RequestParam(value="range",required = false) String range,@RequestParam(value = "question_name",required = false) String question_name, ModelMap model,HttpServletRequest request){
         Integer user_id=null;
+        if (question_name!=null){
+            System.out.println(question_name);
+            model.addAttribute("questionlist",this.investService.Liketitle(question_name));
+            model.addAttribute("opttype","questions");
+            return "myquestions";
+        }
+        else
+            System.out.println(question_name);
+
         if(range!=null)
         {
             List<statistic> statistics=null;
@@ -131,10 +143,21 @@ public class myquestionsController {
         statistic.setUser_id(Integer.valueOf(user_id));
         for(question question:question_list){
             statistic.setQuestion_id(question.getId());
-            statistic.setAnswer_id(Integer.valueOf(request.getParameter(String.valueOf(question.getId()))));
-            System.out.println(statistic.toString());
             statisticService.deleteByquestion_idAnduser_id(statistic.getQuestion_id(), statistic.getUser_id());
-            statisticService.addStatistic(statistic);
+            String[] outerArray=request.getParameterValues(String.valueOf(question.getId()));
+            if(question.getType().equals("text")){
+                answer answer=new answer();
+                answer.setContent(outerArray[0]);
+                answer.setQuestion_id(Integer.valueOf(question.getId()));
+                answerService.addanswer(answer);
+                statistic.setAnswer_id(answer.getId());
+                statisticService.addStatistic(statistic);
+                continue;
+            }
+            for(String outer:outerArray) {
+                statistic.setAnswer_id(Integer.valueOf(outer));
+                statisticService.addStatistic(statistic);
+            }
         }
         return "redirect:/myquestions/questions";
     }
@@ -159,5 +182,40 @@ public class myquestionsController {
         model.addAttribute("opttype","showinvest");
         model.addAttribute("statisticList",statisticService.selectByinvest_idAnduser_id(Integer.valueOf(invest_id), (Integer) request.getSession().getAttribute("idno")));
         return "myquestions";
+    }
+
+    @ResponseBody
+    @RequestMapping("/change_info")
+    public boolean change_info(ModelMap model,HttpServletRequest request,@RequestParam(value="username",required = false) String username,@RequestParam(value="pwd",required = false) String pwd,
+                              @RequestParam(value = "tel",required = false)String tel,@RequestParam(value = "email",required = false)String email){
+        System.out.println("start");
+        String idno= String.valueOf( request.getSession().getAttribute("idno"));
+        System.out.println("get idno success");
+        if(username!=null){
+            System.out.println("start username ");
+            this.memberService.updatememberusername(idno,username);
+            request.getSession().setAttribute("userName",username);
+            System.out.println("end username ");
+            return true;
+        }
+        if(pwd!=null){
+            System.out.println("start pwd ");
+            this.memberService.updatememberpwd(idno,pwd);
+            System.out.println("end pwd ");
+            return true;
+        }
+        if(tel!=null){
+            System.out.println("start tel ");
+            this.memberService.updatemembertel(idno,tel);
+            System.out.println("end tel ");
+            return true;
+        }
+        if(email!=null){
+            System.out.println("start email ");
+            this.memberService.updatememberemail(idno,email);
+            System.out.println("end email ");
+            return true;
+        }
+        return false;
     }
 }

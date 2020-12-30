@@ -31,7 +31,7 @@
         <label></label>
         <div th:switch="${model}">
             <div th:case="register" class="inputBox">
-                <input type="password" id="agpwd" name="agpwd" required=""  onchange="checkpwd()" >
+                <input type="password" id="agpwd" name="agpwd" required=""  onblur="checkpwd()" >
                 <label>再次输入密码</label>
                 <div id="msg" style="color:red;"></div>
             </div>
@@ -39,7 +39,7 @@
         </div>
         <div th:switch="${model}">
             <div th:case="register" class="inputBox">
-                <input type="email" name="email" required="" id="email" onchange="checkemail(this.value)">
+                <input type="email" name="email" required="" id="email" onblur="checkemail(this.value)">
                 <label>邮箱</label>
             </div>
             <label id="label_email"></label>
@@ -51,7 +51,7 @@
             </div>
             <label></label>
         </div>
-        <div th:switch="${model}">
+        <div th:switch="${model}" align="center">
             <input th:case="login" class="center-block" type="submit" name="" value="登录">
             <input th:case="Clogin" class="center-block" type="submit" name="" value="登录">
             <input th:case="register" class="center-block" type="submit" id="button_register" name="" value="注册" >
@@ -63,7 +63,7 @@
         <div th:if="!${ismember}" class="wrong">
             <h5 id="wrong" ></h5>
         </div>
-        <div th:switch="${model}">
+        <div th:switch="${model}" align="center">
             <div th:case="login" calss="other">
                 <a href="/register" id="register">用户注册</a>
                 <a href="/Clogin" id="Clogin">管理员登录</a>
@@ -119,8 +119,12 @@
 
     }
     function checkemail(){
-
         var email=document.getElementById("email").value;
+        if(!/@/.test(email)){
+            var msg = document.getElementById("label_email");
+            msg.innerHTML="<font color='red'>邮箱格式不正确，请检测</font><br>"
+            return ;
+        }
         var xhr =new XMLHttpRequest();
 
         xhr.onreadystatechange=function(){

@@ -34,4 +34,15 @@
         insert into answer(content,question_id) values(#{content},#{question_id})
     </insert>
 
+    <insert id="saveAll" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        insert into answer (content,question_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.content},
+            #{item.question_id}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

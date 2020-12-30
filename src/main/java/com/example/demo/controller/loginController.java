@@ -86,8 +86,8 @@ public class loginController {
         if(member.getPwd().equals(pwd)){
             session.setAttribute("userName", member.getUsername());
             session.setAttribute("idno", member.getIdno());
-            model.addAttribute("member",member);
-            model.addAttribute("opttype","main");
+//            model.addAttribute("member",member);
+//            model.addAttribute("opttype","main");
 ////            String string =stringRedisTemplate.opsForValue().get("aaa");
         }
         else {
@@ -118,8 +118,8 @@ public class loginController {
         if(attendant.getPwd().equals(pwd)){
             session.setAttribute("attendantName", attendant.getUsername());
             session.setAttribute("idno",attendant.getIdno());
-            model.addAttribute("attendant",attendant);
-            model.addAttribute("opttype","main");
+//            model.addAttribute("attendant",attendant);
+//            model.addAttribute("opttype","main");
         }
         else {
             model.addAttribute("model","Clogin");

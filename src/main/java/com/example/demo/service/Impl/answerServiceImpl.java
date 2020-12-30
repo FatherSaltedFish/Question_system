@@ -35,5 +35,10 @@ public class answerServiceImpl implements answerService {
         answerMapper.addanswer(answer);
     }
 
+    @Override
+    public void saveAll(List<answer> answers) {
+        answerMapper.saveAll(answers);
+    }
+
 
 }

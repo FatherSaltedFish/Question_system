@@ -23,4 +23,12 @@ public interface memberMapper {
 
     void updatememberpwd(String idno,String pwd);
 
+    void updatememberusername(String idno,String username);
+
+    void updatemembertel(String idno,String tel);
+
+    void updatememberemail(String idno,String email);
+
+    String getalluser_number();
+
 }

@@ -52,14 +52,24 @@ public class attendantController {
 
 
     @RequestMapping("/main")//我的信息
-    public String main(ModelMap model){
+    public String main(ModelMap model,HttpServletRequest request){
+        HttpSession session=request.getSession();//获取session并将userName存入session对象
+        String idno= (String) session.getAttribute("idno");
+        attendant attendant=this.attendantService.getattendantByidno(idno);
+        model.addAttribute("attendant",attendant);
+        model.addAttribute("opttype","main");
         model.addAttribute("opttype","main");
         return "attendant";
     }
 
 
     @RequestMapping("/selectinvest")//查询问卷
-    public String questions(@RequestParam(value="range",required = false) String range,ModelMap model){
+    public String questions(@RequestParam(value="range",required = false) String range,@RequestParam(value = "question_name",required = false) String question_name,ModelMap model){
+        if (question_name!=null){
+            model.addAttribute("questionlist",this.investService.Liketitle(question_name));
+            model.addAttribute("opttype","selectinvest");
+            return "attendant";
+        }
 
         if(range!=null) {
             switch (range) {
@@ -76,7 +86,6 @@ public class attendantController {
         }else {
             model.addAttribute("questionlist", this.investService.selectALL());
         }
-
         model.addAttribute("opttype","selectinvest");
         return "attendant";
     }
@@ -167,10 +176,11 @@ public class attendantController {
     }
 
     @RequestMapping("/save")//添加问题
-    public String  save(ModelMap model,@RequestParam(value="invest_id") String invest_id,@RequestParam(value="addquestion") String addquestion,@RequestParam(value="addanswer") String[] addanswer,HttpServletRequest request){
+    public String  save(ModelMap model,@RequestParam(value="invest_id") String invest_id,@RequestParam(value="type") String type,@RequestParam(value="addquestion") String addquestion,@RequestParam(value="addanswer") String[] addanswer,HttpServletRequest request){
         question question=new question();
         question.setContent(addquestion);
         question.setInvest_id(Integer.valueOf(invest_id));
+        question.setType(type);
         questionService.addquestion(question);
         for(String answer:addanswer){
             answer a=new answer();
@@ -231,6 +241,13 @@ public class attendantController {
     public String stopdata(ModelMap model,@RequestParam(value = "id")String invest_id){
         investService.updataStatus(Integer.valueOf(invest_id),2);
         return "redirect:/attendant/selectinvest";
+    }
+
+    @ResponseBody
+    @RequestMapping("/user_number")
+    public String user_number(){
+        System.out.println(memberService.getalluser_number());
+        return memberService.getalluser_number();
     }
 
 }

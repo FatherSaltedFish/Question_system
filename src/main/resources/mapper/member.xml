@@ -55,4 +55,27 @@
         set pwd=#{pwd}
         where idno=#{idno}
     </update>
+
+    <update id="updatememberusername" parameterType="java.lang.String" >
+        update member
+        set username=#{username}
+        where idno=#{idno}
+    </update>
+
+    <update id="updatemembertel" parameterType="java.lang.String" >
+        update member
+        set tel=#{tel}
+        where idno=#{idno}
+    </update>
+
+    <update id="updatememberemail" parameterType="java.lang.String" >
+        update member
+        set email=#{email}
+        where idno=#{idno}
+    </update>
+
+    <select id="getalluser_number"  resultType="java.lang.String">
+        select count(*)
+        from member
+    </select>
 </mapper>

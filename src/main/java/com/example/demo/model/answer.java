@@ -1,9 +1,20 @@
 package com.example.demo.model;
 
+import java.util.Objects;
+
 public class answer {
     Integer id;
     String content;
     Integer question_id;
+
+    public answer(String content) {
+        this.content = content;
+    }
+
+    public answer(String content, Integer question_id) {
+        this.content = content;
+        this.question_id = question_id;
+    }
 
     @Override
     public String toString() {
@@ -12,6 +23,21 @@ public class answer {
                 ", content='" + content + '\'' +
                 ", question_id=" + question_id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        answer answer = (answer) o;
+        return Objects.equals(id, answer.id) &&
+                Objects.equals(content, answer.content) &&
+                Objects.equals(question_id, answer.question_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, question_id);
     }
 
     public Integer getId() {

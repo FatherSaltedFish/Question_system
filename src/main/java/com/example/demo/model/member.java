@@ -6,7 +6,6 @@ public class member {
     Integer idno;
 
     String tel;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //在输出的Json数据中隐藏密码，只能输入不输出
     String pwd;
     String username;
     String email;

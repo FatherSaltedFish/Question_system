@@ -6,10 +6,11 @@
             <arg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
             <arg column="content" javaType="java.lang.String" jdbcType="VARCHAR" />
             <arg column="invest_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-        id,content,invest_id
+        id,content,invest_id,type
     </sql>
 
     <select id="selectByInvest_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -32,16 +33,17 @@
     </delete>
 
     <insert id="addquestion" parameterType="com.example.demo.model.question" keyProperty="id" useGeneratedKeys="true">
-        insert into question(content,invest_id) values(#{content},#{invest_id})
+        insert into question(content,invest_id,type) values(#{content},#{invest_id},#{type})
     </insert>
 
-    <insert id="saveAll" parameterType="java.util.List">
-        insert into question (content,invest_id)
+    <insert id="saveAll" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        insert into question (content,invest_id,type)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
             #{item.content},
-            #{item.invest_id}
+            #{item.invest_id},
+            #{item.type}
             )
         </foreach>
     </insert>

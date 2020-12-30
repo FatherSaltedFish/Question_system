@@ -49,4 +49,24 @@ public class memberServiceImpl implements memberService {
     public void updatememberpwd(String idno, String pwd) {
         memberMapper.updatememberpwd(idno,pwd);
     }
+
+    @Override
+    public void updatememberusername(String idno, String username) {
+        memberMapper.updatememberusername(idno,username);
+    }
+
+    @Override
+    public void updatemembertel(String idno, String tel) {
+        memberMapper.updatemembertel(idno,tel);
+    }
+
+    @Override
+    public void updatememberemail(String idno, String email) {
+        memberMapper.updatememberemail(idno,email);
+    }
+
+    @Override
+    public String getalluser_number() {
+        return memberMapper.getalluser_number();
+    }
 }

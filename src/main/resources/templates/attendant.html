@@ -27,12 +27,7 @@
 
 
 <body>
-
-<script language="JavaScript" type="text/javascript" th:inline="javascript">
-     if([[${session.attendantName}]]==null){
-         window.location.replace("/nouser");
-     }
-</script>
+<!--<body background="../images/pic07.jpg" style=" background-repeat:no-repeat ;background-size: cover;background-attachment: fixed;"></body>-->
 <!--导航栏-->
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
     <a class="navbar-brand" href="#" th:text="${session.attendantName}" data-toggle="dropdown">喵卷星</a>
@@ -71,46 +66,45 @@
 
 <!--内容-->
 <div th:switch="${opttype}" style="margin-top:80px">
+    <!--模态框-->
+    <!-- 模态框 -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">上传问卷</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <form action="/excel/importexcel" method="post" name="f_upload" enctype="multipart/form-data">
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <input type="file" name="excelFile" accept=".xls,.xlsx">
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <input type="submit" value="上传" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
 <!--    个人信息-->
     <div th:case="main" class="container" style="margin-top:30px">
-        <div class="row">
-            <div class="col-sm-2">
-                <h2>关于我</h2>
-                <h5>我的照片:</h5>
-                <div class="fakeimg">
-                    <!--                <img src="images/pic01.jpg" class="rounded-circle">-->
-                </div>
-                <p>关于我的介绍..</p>
-                <h3>一些链接</h3>
-                <p>说明文本</p>
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link " href="#">激活状态</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#">链接</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#">链接</a>
-                    </li>
-                    <!--                <li class="nav-item">-->
-                    <!--                    <a class="nav-link disabled" href="#">禁用</a>-->
-                    <!--                </li>-->
+        <div class="row" align="center">
+            <dvi class="col-sm-3"></dvi>
+            <div class="col-sm-6" align="center">
+                <ul>
+<!--                    <h3>ID为:<span class="badge badge-secondary" th:text="${attendant.idno}"></span></h3>-->
+                    <p><h2> 管理员，欢迎使用喵卷星</h2>
+                    </p>
+                    <p><h2>喵卷星累计使用人数为:</h2><h1 id="user_number" >0</h1></p>
                 </ul>
-                <hr class="d-sm-none">
-            </div>
-            <div class="col-sm-10">
-                <h2>标题</h2>
-                <h5>副标题</h5>
-                <div class="fakeimg">图像</div>
-                <p>一些文本..</p>
-                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
-                <br>
-                <h2>标题</h2>
-                <h5>副标题</h5>
-                <div class="fakeimg">图像</div>
-                <p>一些文本..</p>
-                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
             </div>
         </div>
     </div>
@@ -118,7 +112,7 @@
     <div th:case="selectinvest">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <ul class="list-group aside-box">
                         <li class="list-group-item">
                             分类
@@ -139,7 +133,7 @@
                 </div>
                 <div class="col-sm-8">
                     <form class="form-search">
-                        <input id="find_input" class="input-medium search-query" type="text" /> <button id="find_button"type="submit" class="btn btn-primary">查找</button>
+                        <div ><input id="find_input" class="input-medium search-query" type="text" /> <a  id="find_button"type="submit" class="btn btn-primary">查找</a></div>
                     </form>
                     <table data-toggle="table" id="invest_table" class="table table-striped table-bordered table-hover table-responsive-sm table-condensed " style="margin-top:30px" >
                         <thead>
@@ -172,6 +166,7 @@
                                 <a th:href="@{/attendant/showinvest(id=${invest.id})}" >编辑</a>
                                 <a th:href="@{/attendant/releasedata(id=${invest.id})}" >发布问卷</a>
                                 <a th:href="@{/attendant/stopdata(id=${invest.id})}" >结束问卷</a>
+                                <a th:href="@{/attendant/showdata(id=${invest.id})}" >查看数据</a>
                             </td>
                         </tr>
                         </tbody>
@@ -185,17 +180,24 @@
     <!--添加问卷-->
     <div th:case="addinvest">
         <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h3 class="text-center">
-                        请输入相关信息
-                    </h3>
+            <div class="col-sm-12">
+                    <h3 class="text-center">请输入相关信息</h3>
                 </div>
-            </div>
             <div class="row">
                 <div class="col-sm-4">
+                    <ul class="list-group">
+                            <li class="list-group-item">
+                                分类
+                            </li>
+                            <li class="list-group-item">
+                                <a  href="/excel/downtemplate">下载模板</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a  href="#" data-target="#myModal" data-toggle="modal" id="importexcel" style="color:#007BFF">上传问卷</a>
+                            </li>
+                        </ul>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" align="center">
                     <form action="/attendant/showinvest" method="post">
                         <fieldset>
                             <h5>请输入问卷名称： </h5>
@@ -224,23 +226,23 @@
                             <a id="addquestion1" href="#" >单选题</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="#">库</a>
+                            <a id="addquestion2" href="#">多选题</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="#">应用</a>
+                            <a id="addquestion3" href="#">填空题</a>
                         </li>
                     </ul>
                 </div>
                 <div class="col-sm-9">
                     <input type="hidden" id="invest_id" th:value="${invest.id}">
-                    <h2 th:text="${invest.title}" class="text-center font-weight-bold"></h2>
+                    <div align="center"><h2 th:text="${invest.title}" class="text-center font-weight-bold"></h2></div>
                     <br>
-                    <form th:action="@{/attendant/save}" method="post">
+                    <form th:action="@{/attendant/save}" method="get">
                         <input type="hidden" name="invest_id" th:value="${invest.id}">
-                        <div  th:each="question:${questionlist}" th:action="@{/action_page.php/(question_id=${question.id})}">
+                        <div  name="question" th:each="question:${questionlist}" th:action="@{/action_page.php/(question_id=${question.id})}">
                             <div class="card-body form-inline"><h2 th:text="${question.content}"></h2><a type="button" class="card-link text-primary text-right"  th:onclick="delquestion([[${question.content}]],[[${question.id}]],[[${question.invest_id}]])">删除问题</a></div>
-                            <div th:each="answer:${answerlist}"  th:if="${answer.question_id}==${question.id}" class="custom-control custom-radio card"><!--class="custom-control custom-radio custom-control-inline"-->
-                                <input type="radio" class="custom-control-input" th:id="'answerid='+(${answer.id})" th:name="'questionid'+${question.id}" th:value="${answer.id}" >
+                            <div th:each="answer:${answerlist}"  th:if="${answer.question_id}==${question.id}" class="custom-control custom-radio "><!--class="custom-control custom-radio custom-control-inline"-->
+                                <input th:type="${question.type}" class="custom-control-input" th:id="'answerid='+(${answer.id})" th:name="'questionid'+${question.id}"  ><!--th:value="${answer.id}"-->
                                 <label class="custom-control-label"  th:text="${answer.content}" th:for="'answerid='+(${answer.id})">自定义单选框</label>
                             </div>
                         </div>
@@ -254,29 +256,29 @@
 
     </div>
     <!--添加问题-->
-    <div th:case="addquestion">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            添加问卷
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#">多选题</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#">库</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#">应用</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-9"></div>
-            </div>
-        </div>
-    </div>
+<!--    <div th:case="addquestion">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-sm-3">-->
+<!--                    <ul class="list-group">-->
+<!--                        <li class="list-group-item">-->
+<!--                            添加问卷-->
+<!--                        </li>-->
+<!--                        <li class="list-group-item">-->
+<!--                            <a href="#">多选题</a>-->
+<!--                        </li>-->
+<!--                        <li class="list-group-item">-->
+<!--                            <a href="#">库</a>-->
+<!--                        </li>-->
+<!--                        <li class="list-group-item">-->
+<!--                            <a href="#">应用</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="col-sm-9"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <!--展示用户-->
     <div th:case="selectmember">
         <div class="row">
@@ -366,12 +368,24 @@
     <!--查看数据-->
     <div th:case="showdata">
         <div class="row">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-2">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        功能
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/excel/downexcelByinvest_id(id=${invest.id})}">导出问卷</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/excel/downdataexcelByinvest_id(id=${invest.id})}">导出问卷数据</a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-sm-8">
                 <h2 th:text="${invest.title}" class="text-center font-weight-bold"></h2>
                 <div th:each="question:${questionList}" class="card-body" th:id="'question'+${question.id}">
                     <h3 th:text="${question.content}" th:id="'question_content'+${question.id}"}></h3>
-                    <div th:each="answer:${answerList}" th:if="${answer.question_id==question.id}" class="card-body form-inline">
+                    <div th:name="${question.type}" th:each="answer:${answerList}" th:if="${answer.question_id==question.id}" class="card-body form-inline">
                         <div class="col-sm-4"><h4 th:name="content" th:text="${answer.content}"></h4></div>
                         <div name="text-right" class="col-sm-4">
                             <h4 class="text-right" th:name="number" th:each="invest_data:${invest_dataList}" th:if="${invest.id==invest_data.invest_id && question.id==invest_data.question_id && answer.id==invest_data.answer_id}" th:text="${invest_data.number}"></h4>
@@ -457,7 +471,14 @@
 
     }
     function checkemail(){
+
         var email=document.getElementById("email").value;
+        if(!/@/.test(email)){
+            var msg = document.getElementById("label_email");
+            msg.innerHTML="<font color='red'>邮箱格式不正确，请检查</font>"
+            request_email=false;
+            return ;
+        }
         var xhr =new XMLHttpRequest();
 
         xhr.onreadystatechange=function(){
@@ -486,15 +507,14 @@
             alert("请先完成本题目的编辑");
             return false;
         }
-        $("form").append("<div id='add'>  题目：<input type='text' id='addquestion' name='addquestion' required=''>" +
+        $("form").append("<div id='add'>  <input type='hidden' name='type' value='radio'>题目：<input type='text' id='addquestion' name='addquestion' required=''>" +
             "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a><br>  </div>" +
             "<div name='answer'>答案：<input type='text'  name='addanswer' required=''>  <a class='text-primary' name='delanswer'>删除</a><br> </div>" +
             "<div name='answer'>答案：<input type='text'  name='addanswer' required=''>  <a class='text-primary' name='delanswer'>删除</a><br> </div>" +
-            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a> </div>" +
-            "<a class='text-primary' id='addanswer' onclick='addanswer()'>添加选项</a><br>" +
-            "<button class=\"btn btn-outline-primary\" type='submit' id='savequestion'>保存</button> " +
-            "<a class=\"btn btn-outline-primary\" type='button' id='canceladdquestion' onclick='canceladd()'>取消</a> " +
-            "</div>");
+            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a> </div>");
+        $("form").append("<a class='text-primary' id='addanswer' onclick='addanswer()'>添加选项<br></a></div>"
+            +"<button class='btn btn-outline-primary' type='submit' id='savequestion'>保存</button> " +
+            "<a class=\"btn btn-outline-primary\" type='button' id='canceladdquestion' onclick='canceladd()'>取消</a> ");
         $.each($("div[name='answer']"),function (){
             //$(this).attr("onclick","canceladd("+addquestion_number+")");
             $(this).attr("id","answer"+addquestion_number);
@@ -503,9 +523,48 @@
         })
         ifadd_question=false;
     });
+    $("#addquestion2").click(function(){
+        if(ifadd_question==false) {
+            alert("请先完成本题目的编辑");
+            return false;
+        }
+        $("form").append("<div id='add'>  <input type='hidden' name='type' value='checkbox'>题目：<input type='text' id='addquestion' name='addquestion' required=''>" +
+            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a><br>  </div>" +
+            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''>  <a class='text-primary' name='delanswer'>删除</a><br> </div>" +
+            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''>  <a class='text-primary' name='delanswer'>删除</a><br> </div>" +
+            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a> </div>");
+        $("form").append("<a class='text-primary' id='addanswer' onclick='addanswer()'>添加选项<br></a></div>"
+            +"<button class='btn btn-outline-primary' type='submit' id='savequestion'>保存</button> " +
+            "<a class=\"btn btn-outline-primary\" type='button' id='canceladdquestion' onclick='canceladd()'>取消</a> ");
+        $.each($("div[name='answer']"),function (){
+            //$(this).attr("onclick","canceladd("+addquestion_number+")");
+            $(this).attr("id","answer"+addquestion_number);
+            $(this).find("a").attr("onclick","delanswer("+addquestion_number+")");
+            addquestion_number=addquestion_number+1;
+        })
+        ifadd_question=false;
+    });
+    $("#addquestion3").click(function(){
+        if(ifadd_question==false) {
+            alert("请先完成本题目的编辑");
+            return false;
+        }
+        $("form").append("<div id='add'>  <input type='hidden' name='type' value='text'>题目：<input type='text' id='addquestion' name='addquestion' required=''>" +
+            "<div name='answer'><input type='hidden'  name='addanswer' value='   ' required=''></div><br></div>");
+        $("form").append("<button class='btn btn-outline-primary' type='submit' id='savequestion'>保存</button> " +
+            "<a class=\"btn btn-outline-primary\" type='button' id='canceladdquestion' onclick='canceladd()'>取消</a> ");
+        $.each($("div[name='answer']"),function (){
+            //$(this).attr("onclick","canceladd("+addquestion_number+")");
+            $(this).attr("id","answer"+addquestion_number);
+            $(this).find("a").attr("onclick","delanswer("+addquestion_number+")");
+            addquestion_number=addquestion_number+1;
+        })
+        ifadd_question=false;
+    });
+
     function addanswer(){
-        $("#answer"+(addquestion_number-1)).append("" +
-            "<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a><br>  </div>");
+        //$("#answer"+(addquestion_number-1)).append("" +
+        $("div[id='add']").append("<div name='answer'>答案：<input type='text'  name='addanswer' required=''> <a class='text-primary' name='delanswer'>删除</a><br>  </div>");
         addquestion_number=1;
         $.each($("div[name='answer']"),function (){
             //$(this).attr("onclick","canceladd("+addquestion_number+")");
@@ -523,12 +582,24 @@
     }
 
     function canceladd(){
-        $("#add").empty();
+        $("form").find($("#add")).remove();
+        $("form").find($("#addanswer")).remove();
+        $("form").find($("#savequestion")).remove();
+        $("form").find($("#canceladdquestion")).remove();
+        ifadd_question=true;
     }
 
     function delanswer(number){
-        $("#answer"+number).empty();
+        $("#answer"+number).remove();
     }
+
+    $(document).ready(function(){
+        $.each($("div[name='text']"),function (){
+            if($(this).find($("div[name='text-right']")).text()==0){
+                $(this).remove();
+            }
+        })
+    })
 // 显示图表
     $(document).ready(function() {
          $("a[class='btn btn-outline-primary']").click(function () {
@@ -596,6 +667,23 @@
         })
     })
 
+    $(document).ready(function(){
+        $.each($("div[name='question']"),function (){
+            if($(this).find($("input[type='radio']")).length!=0){
+                $(this).find("h2").append("(单选题)")
+            }
+            if($(this).find($("input[type='checkbox']")).length!=0){
+                $(this).find("h2").append("(多选题)")
+            }
+            if($(this).find($("input[type='text']")).length!=0){
+                $(this).find($("input[type='text']")).removeAttr("class");
+                $(this).find("h2").append("(填空题)");
+                $(this).find("label").remove();
+                $(this).find("div:gt(1)").remove();
+
+            }
+        })
+    })
 
     $(document).ready(function (){
         $.each($("td[name='invest_status']"),function (){
@@ -618,15 +706,34 @@
     });
 
     $(document).ready(function (){
-        $("#find_input").bind('input propertychange', function() {
-
+        $("#find_button").click(function (){
+            if(document.getElementById("find_input").value!="") {
+                var url = "/attendant/selectinvest?question_name=" + document.getElementById("find_input").value
+                window.location.replace(url);
+            }
         })
     })
 
     //不允许
 
 
-    //表格导出
+    $(document).ready(function (){
+        $("#importexcel").click(function (){
+
+        })
+    })
+
+
+    $(document).ready(function (){
+        $.ajax({
+            method:"post",
+            url:"/attendant/user_number",
+            success:function (data){
+                var text=document.getElementById("user_number");
+                text.innerHTML=data;
+            }
+        })
+    })
 
 </script>
 

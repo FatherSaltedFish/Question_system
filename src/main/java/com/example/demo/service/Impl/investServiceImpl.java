@@ -54,4 +54,9 @@ public class investServiceImpl implements investService {
         return investMapper.batchInsert(invests);
     }
 
+    @Override
+    public List<invest> Liketitle(String title) {
+        return investMapper.Liketitle(title);
+    }
+
 }

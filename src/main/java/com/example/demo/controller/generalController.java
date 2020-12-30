@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.model.invest_data;
+import com.example.demo.model.member;
 import com.example.demo.model.statistic;
 import com.example.demo.service.memberService;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -76,5 +77,12 @@ public class generalController {
             }
         }
         return false;
+    }
+
+    @ResponseBody
+    @RequestMapping("/getmember")
+    public member getmembet(@RequestParam(value = "id") String invest_id) {
+        System.out.println(memberService.getmemberById(Integer.valueOf(invest_id)));
+        return memberService.getmemberById(Integer.valueOf(invest_id));
     }
 }
